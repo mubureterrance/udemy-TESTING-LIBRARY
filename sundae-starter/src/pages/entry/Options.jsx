@@ -1,42 +1,35 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import ScoopOption from "./ScoopOption";
+import { useEffect, useState } from "react";
 import Row from "react-bootstrap/Row";
+import ScoopOption from "./ScoopOption";
 import ToppingOption from "./ToppingOption";
 import AlertBanner from "../common/AlertBanner";
-import { pricePerItem } from "../../constants/index";
-import { formatCurrency } from "../../utils/index";
-import { useOrderDtetails } from "../../contexts/OrderDetails";
+import { pricePerItem } from "../../constants";
+import { formatCurrency } from "../../utilities";
+import { useOrderDetails } from "../../contexts/OrderDetails";
 
-function Options({ optionType }) {
+export default function Options({ optionType }) {
   const [items, setItems] = useState([]);
   const [error, setError] = useState(false);
-  const { totals } = useOrderDtetails();
+  const { totals } = useOrderDetails();
 
-  // option type is scoop or toppings
+  // optionType is 'scoops' or 'toppings
   useEffect(() => {
     axios
       .get(`http://localhost:3030/${optionType}`)
       .then((response) => setItems(response.data))
-      .catch((error) => {
-        setError(true);
-      });
+      .catch((error) => setError(true));
   }, [optionType]);
 
   if (error) {
+    // @ts-ignore
     return <AlertBanner />;
   }
 
-  // TODO: replace null with ToppingOption when available
-  const ItemComponent =
-    optionType === "scoops"
-      ? ScoopOption
-      : optionType === "toppings"
-      ? ToppingOption
-      : null;
+  const ItemComponent = optionType === "scoops" ? ScoopOption : ToppingOption;
   const title = optionType[0].toUpperCase() + optionType.slice(1).toLowerCase();
 
-  const optionsItems = items.map((item) => (
+  const optionItems = items.map((item) => (
     <ItemComponent
       key={item.name}
       name={item.name}
@@ -51,9 +44,7 @@ function Options({ optionType }) {
       <p>
         {title} total: {formatCurrency(totals[optionType])}
       </p>
-      <Row>{optionsItems}</Row>
+      <Row>{optionItems}</Row>
     </>
   );
 }
-
-export default Options;

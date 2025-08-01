@@ -1,12 +1,10 @@
-import React from "react";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
-import { useOrderDtetails } from "../../contexts/OrderDetails";
+import { useOrderDetails } from "../../contexts/OrderDetails";
 
-function ScoopOption({ name, imagePath }) {
-  const { updateItemCount } = useOrderDtetails();
-
+export default function ScoopOptions({ name, imagePath }) {
+  const { updateItemCount } = useOrderDetails();
   const handleChange = (e) =>
     updateItemCount(name, parseInt(e.target.value), "scoops");
 
@@ -18,7 +16,7 @@ function ScoopOption({ name, imagePath }) {
         alt={`${name} scoop`}
       />
       <Form.Group
-        controlId={`${name}=count`}
+        controlId={`${name}-count`}
         as={Row}
         style={{ marginTop: "10px" }}
       >
@@ -36,5 +34,3 @@ function ScoopOption({ name, imagePath }) {
     </Col>
   );
 }
-
-export default ScoopOption;
