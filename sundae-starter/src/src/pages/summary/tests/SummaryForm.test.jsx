@@ -1,12 +1,11 @@
 import { render, screen } from "@testing-library/react";
-import SummaryForm from "../summary/SummaryForm";
-import { expect, test } from "vitest";
+import SummaryForm from "../SummaryForm";
 import userEvent from "@testing-library/user-event";
 
 test("Initial conditions", () => {
   render(<SummaryForm />);
   const checkbox = screen.getByRole("checkbox", {
-    name: /terms and Conditions/i,
+    name: /terms and conditions/i,
   });
   expect(checkbox).not.toBeChecked();
 
@@ -14,12 +13,12 @@ test("Initial conditions", () => {
   expect(confirmButton).toBeDisabled();
 });
 
-test("Chekbox enables button on first click and disable button on second click", async () => {
+test("Checkbox enables button on first click and disables on second click", async () => {
   const user = userEvent.setup();
 
   render(<SummaryForm />);
   const checkbox = screen.getByRole("checkbox", {
-    name: /terms and Conditions/i,
+    name: /terms and conditions/i,
   });
   const confirmButton = screen.getByRole("button", { name: /confirm order/i });
 
@@ -30,11 +29,11 @@ test("Chekbox enables button on first click and disable button on second click",
   expect(confirmButton).toBeDisabled();
 });
 
-test("popover resonds to hover", async () => {
+test("popover responds to hover", async () => {
   const user = userEvent.setup();
   render(<SummaryForm />);
 
-  // popover start out hidden
+  // popover starts out hidden
   const nullPopover = screen.queryByText(
     /no ice cream will actually be delivered/i
   );
@@ -43,12 +42,10 @@ test("popover resonds to hover", async () => {
   // popover appears on mouseover of checkbox label
   const termsAndConditions = screen.getByText(/terms and conditions/i);
   await user.hover(termsAndConditions);
-  const popover = screen.getByText(
-    /no ice cream will actually be delivered/i
-  );
+  const popover = screen.getByText(/no ice cream will actually be delivered/i);
   expect(popover).toBeInTheDocument();
 
-  // popover diasppears when we mouse over label
+  // popover disappears when we mouse out
   await user.unhover(termsAndConditions);
   expect(popover).not.toBeInTheDocument();
 });
